@@ -67,7 +67,7 @@ argument-hint: ''
 **未編譯來源**
 
 - 計算 raw/ 和 artifacts/ 中沒有出現在 All-Sources.md 的 .md 檔案數量
-- 依子資料夾分類列出
+- 依 frontmatter 的 `origin` property 分類列出（external / self / 缺少 origin）
 
 ### 4. 連結性檢查
 

@@ -1,7 +1,7 @@
 ---
 name: compile
 description: '編譯 raw/ 與 artifacts/ 成 wiki/（摘要、概念、索引）'
-argument-hint: '[資料夾路徑或檔案數量，例如 raw/articles 10 或 artifacts/essays]'
+argument-hint: '[檔案數量，例如 10 或 artifacts/essays]'
 ---
 
 # 知識庫編譯
@@ -14,24 +14,18 @@ argument-hint: '[資料夾路徑或檔案數量，例如 raw/articles 10 或 art
 
 - 如果使用者指定了路徑或數量，就處理那個範圍
 - 如果沒有指定，讀取 wiki/indexes/All-Sources.md，與 raw/ 和 artifacts/ 比對，找出**尚未編譯的新檔案**
-- 如果新檔案超過 15 個，告知使用者，建議分批處理（每批 10-15 個）
+- 如果新檔案超過 5 個，告知使用者，建議分批處理（每批 1-5 個）
 
 ### 2. 判斷來源類型
 
-根據檔案的子資料夾路徑自動判斷 `origin`：
+讀取檔案 frontmatter 的 `origin` property：
 
 **origin: external**（外部來源——他人撰寫）
 
-- `raw/articles/`
-- `raw/books/`
-- `raw/podcasts/`
-- `raw/papers/`
-
 **origin: self**（自己的——使用者撰寫）
 
-- `raw/notes/`
-- `raw/projects/`
-- `artifacts/*`
+- `artifacts/*` 視為 `origin: self`（即使缺少 property）
+- 若 `raw/` 中的檔案缺少 `origin` property → 告知使用者，跳過該檔案
 
 ### 3. 讀取每個來源檔案
 
@@ -100,7 +94,9 @@ tags: [tag1, tag2]
 ```yaml
 ---
 concept: 概念名稱
-related: [相關概念1, 相關概念2]
+related:
+  - "[[相關概念1]]"
+  - "[[相關概念2]]"
 updated: YYYY-MM-DD
 sources:
   - "[[來源1]]"
@@ -149,6 +145,17 @@ sources:
 - 建立或更新了哪些概念
 - 索引更新狀態
 
+### 8. 隨機回顧一個既有概念
+
+從 wiki/indexes/All-Concepts.md 中，隨機挑選一個**本次未新建或更新**的既有概念，顯示它的「定義」與「我的實踐」段落，然後問：
+
+> 「這個定義還準確嗎？我的實踐有沒有可以補的一行？」
+
+- 使用者回答 → 立即更新概念條目，更新 `updated` 日期
+- 使用者回答「略過」或不作答 → 跳過，不強制
+
+目的：把每次 compile 當作觸發點，維持對既有知識的低摩擦回顧，避免概念條目只增不改。
+
 ## 編譯原則
 
 - **不修改 raw/ 或 artifacts/**：素材是唯讀的
@@ -156,5 +163,6 @@ sources:
 - **origin 是必填欄位**：external 或 self，從來源路徑自動判斷
 - **疑點不能留空**（external）：如果沒有發現問題，寫「這個來源的論點有充分支撐；沒有發現重大疑點」
 - **概念需要交叉引用**：只有在 2 個以上摘要中出現的概念才建立獨立條目。單一提及放在摘要的「術語」段落即可
+- **內文使用 wikilinks**：在概念正文與摘要正文中，每個段落首次提及且有（或應建立）獨立條目的概念名稱，用 `[[概念名稱]]` 包起來。`related` 欄位也必須使用 `"[[概念名稱]]"` 格式，讓 Obsidian 識別為連結
 - **檔名不加前綴**：摘要與概念的檔名不加 S-、C- 等前綴
 - **概念條目以使用者視角為主**：「我的實踐」在「外部觀點」之前

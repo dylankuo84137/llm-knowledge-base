@@ -10,8 +10,8 @@ argument-hint: '<檔案或資料夾路徑，如 mybook.epub、report.pdf、~/Dow
 
 | 來源格式 | 輸出位置 | 媒體位置 |
 |----------|---------|---------|
-| EPUB / PDF / DOCX | `raw/books/` | `raw/books/assets/` |
-| Facebook JSON 匯出 | `raw/notes/social/facebook/` | `raw/notes/social/facebook/assets/` |
+| EPUB / PDF / DOCX | `raw/` | `raw/assets/` |
+| Facebook JSON 匯出 | `raw/` | `raw/assets/` |
 
 ## 輸入
 
@@ -70,7 +70,7 @@ fi
 
 若提取失敗，用檔名（去副檔名）當書名。
 
-產出檔名：`raw/books/{書名}.md`
+產出檔名：`raw/{書名}.md`
 
 ### Step 3：轉換
 
@@ -80,7 +80,7 @@ fi
 
 1. **pandoc 轉換**（`--wrap=none` 避免斷行）：
 ```bash
-pandoc "$FILE" -t markdown --wrap=none --extract-media=raw/books/assets -o raw/books/{書名}_raw.md
+pandoc "$FILE" -t markdown --wrap=none --extract-media=raw/assets -o raw/{書名}_raw.md
 ```
 
 2. **後處理**：
@@ -122,7 +122,7 @@ toc = doc.get_toc()
 
 1. **pandoc 轉換**：
 ```bash
-pandoc "$FILE" -t markdown --wrap=none --extract-media=raw/books/assets -o raw/books/{書名}_raw.md
+pandoc "$FILE" -t markdown --wrap=none --extract-media=raw/assets -o raw/{書名}_raw.md
 ```
 
 2. **後處理**（與 EPUB 類似但通常更乾淨）：
@@ -188,8 +188,8 @@ isbn: "ISBN"         # 若能提取（EPUB/PDF）
 
 | 檔案 | 格式 | 產出 | 大小 |
 |------|------|------|------|
-| book1.epub | EPUB | raw/books/Book1.md | 245 KB |
-| report.pdf | PDF | raw/books/Report.md | 872 KB |
+| book1.epub | EPUB | raw/Book1.md | 245 KB |
+| report.pdf | PDF | raw/Report.md | 872 KB |
 
 ---
 
@@ -228,7 +228,7 @@ Facebook「下載你的資訊」匯出為 JSON 格式，文字使用 latin1-enco
 python3 .claude/scripts/facebook_to_md.py "$ARGUMENTS" [自訂輸出目錄]
 ```
 
-輸出目錄預設為 `raw/notes/social/facebook/`。
+輸出目錄預設為 `raw/`。
 
 ### 腳本行為
 
@@ -264,6 +264,6 @@ python3 .claude/scripts/facebook_to_md.py "$ARGUMENTS" [自訂輸出目錄]
 - EPUB 和 DOCX 的轉換品質通常優於 PDF（有結構資訊）
 - PDF 不提取圖片，只轉換文字內容
 - 批次模式下若某個檔案失敗，跳過它並繼續處理其他檔案，最後回報失敗清單
-- 若 `raw/books/` 已有同名 .md 檔案，詢問使用者是否覆蓋
-- Facebook 匯出若 `raw/notes/social/facebook/` 已有檔案，會覆蓋同名檔案
+- 若 `raw/` 已有同名 .md 檔案，詢問使用者是否覆蓋
+- Facebook 匯出若 `raw/` 已有檔案，會覆蓋同名檔案
 - 轉換後建議在 Obsidian 中開啟確認格式

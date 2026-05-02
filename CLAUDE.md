@@ -48,14 +48,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ```
 vault/
-├── raw/                    # 原始資料，只進不改（不管誰寫的，未經編譯加工）
-│   ├── articles/           # 文章剪藏（origin: external）
-│   ├── books/              # 書籍筆記（origin: external）
-│   ├── podcasts/           # 播客轉錄（origin: external）
-│   ├── papers/             # 學術論文（origin: external）
-│   ├── notes/              # 隨手靈感筆記（origin: self）
-│   │   └── social/         # 社群平台匯入（facebook/ 等，origin: self）
-│   └── projects/           # 專案相關原始資料（origin: self）
+├── raw/                    # 原始資料，只進不改，不分子資料夾
+│   └── assets/             # 附件（圖片、影片等，由工具自動產生）
 │
 ├── wiki/                   # 編譯產物，由 LLM 維護，不手動改
 │   ├── indexes/            # All-Sources.md, All-Concepts.md
@@ -160,7 +154,7 @@ Vault 包含以下類型文件：
 2. **編譯知識**：概念條目、摘要、索引 → `wiki/`
 3. **問答輸出**：複雜提問的推理結果 → `brainstorming/chat/`
 4. **成品作品**：文章、專案成果與對外產出 → `artifacts/`
-5. **隨手靈感**：隨時記下的想法（YYYYMMDD 命名）→ `raw/notes/`
+5. **隨手靈感**：隨時記下的想法（YYYYMMDD 命名）→ `raw/`
 
 ## 核心主題
 
@@ -184,7 +178,7 @@ Vault 包含以下類型文件：
 - 使用 Glob 找特定命名模式的檔案
 
 ### 整理筆記（編譯流程）
-- 捕捉：新內容放進 `raw/`（文章 → articles/，靈感 → notes/）
+- 捕捉：新內容放進 `raw/`（不分子資料夾，用 frontmatter 的 `origin` property 區分 external / self）
 - 編譯：累積 5-10 篇後，執行 `/compile` 讓 LLM 讀 raw/ 最新檔案，生成摘要、提取概念、更新索引
 - 問答：複雜提問的結果存到 `brainstorming/chat/`，帶推理過程和來源連結
 - 定期健康檢查：定期執行 `/health-check` 讓 LLM 掃 wiki/，輸出 `brainstorming/health/` 報告
@@ -219,4 +213,4 @@ Vault 包含以下類型文件：
 - 沒有建置指令、lint 或測試流程
 - 內容以研究與寫作為主
 - 進行中的文件請視為草稿處理
-- 除非明確要求，保留 [YOUR_LANGUAGE] 內容不翻譯
+- 除非明確要求，保留英文專有名詞內容不翻譯

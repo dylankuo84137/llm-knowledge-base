@@ -20,14 +20,8 @@ Andrej Kapathy的llm-wiki是三層式的架構(raw->wiki->schema)他的架構是
 ## 架構
 
 ```
-raw/                    ← 你的圖書館：未經編輯的原始素材
-  ├── articles/           收藏的文章
-  ├── books/              書籍筆記與畫線
-  ├── podcasts/           podcast 逐字稿
-  ├── papers/             學術論文
-  ├── notes/              你的快速想法
-  │   └── social/          社群平台匯入（facebook/ 等）
-  └── projects/           專案相關素材
+raw/                    ← 你的圖書館：未經編輯的原始素材（不分子資料夾）
+  └── assets/             附件（圖片、影片，由工具自動產生）
 
 wiki/                   ← 你的百科全書：LLM 編譯的知識
   ├── summaries/          每個來源一份摘要
@@ -50,7 +44,7 @@ artifacts/              ← 你的發表成果：完成的作品
 2. 將要測試的資料放入這個資料夾
 3. 在這個資料夾打開 Claude Code
 4. 執行 `/init-llm` 進行互動式設定——它會問你幾個問題，然後幫你設定好一切
-5. 把第一篇文章丟進 `raw/articles/`
+5. 把第一篇文章丟進 `raw/`（frontmatter 加上 `origin: external`）
 6. 執行 `/compile`——看著第一份摘要和概念條目出現在 `wiki/` 裡
 
 ## Claude 與 Codex
@@ -74,7 +68,7 @@ artifacts/              ← 你的發表成果：完成的作品
 |------|------|
 | `/init-llm` | 互動式設定——詢問你的個人資料與偏好、掃描現有檔案、提出整理計畫，並設定 `CLAUDE.md` |
 | `/compile` | 讀取 `raw/` 和 `artifacts/`，在 `wiki/summaries/` 生成摘要，提取概念至 `wiki/concepts/`，更新索引 |
-| `/convert-to-md` | 將 EPUB / PDF / DOCX 檔案或 Facebook JSON 匯出轉成 Obsidian Markdown，存入對應的 `raw/` 子目錄 |
+| `/convert-to-md` | 將 EPUB / PDF / DOCX 檔案或 Facebook JSON 匯出轉成 Obsidian Markdown，存入 `raw/` |
 | `/health-check` | 掃描 `wiki/` 的一致性問題、完整性缺口與連結性問題，輸出優先排序報告至 `brainstorming/health/` |
 | `/thinking-partner` | 協作思考——搜尋 vault 中的相關筆記、提出釐清問題，幫你深度探索複雜問題 |
 | `/write-partner` | 寫作探索——找出 vault 中的相關內容、反例與開放問題，幫你在動筆前把想法挖得更深 |
@@ -83,9 +77,9 @@ artifacts/              ← 你的發表成果：完成的作品
 ## 編譯如何運作
 
 ```
-1. 你把一個檔案放進 raw/articles/
+1. 你把一個檔案放進 raw/（frontmatter 標注 origin: external 或 origin: self）
 2. 執行 /compile
-3. LLM 讀取檔案，判斷 origin（external vs. self）
+3. LLM 讀取 frontmatter 的 origin property，判斷來源類型
 4. 在 wiki/summaries/ 生成摘要，包含：
    - 核心結論
    - 關鍵證據
@@ -103,7 +97,7 @@ artifacts/              ← 你的發表成果：完成的作品
 
 ### 第一步：捕捉
 
-你先把文章存進 `raw/articles/20260404 AI改變學生提問能力.md`。這一步只做收集，不需要先分類、摘要，或決定它跟哪個主題有關。
+你先把文章存進 `raw/20260404 AI改變學生提問能力.md`，frontmatter 加上 `origin: external`。這一步只做收集，不需要先分類、摘要，或決定它跟哪個主題有關。
 
 ### 第二步：編譯
 
@@ -138,7 +132,7 @@ artifacts/              ← 你的發表成果：完成的作品
 NotebookLM 出現之後，我以為「不要整理，全部交給 AI」。但很快就發現，沒有可累積的記憶或是反覆的上傳跟整理資料夾，我依然沒有把時間花在思考
 ，知識沒有真正內化。
 
-所以我把系統換成四層：`raw/` 放原始資料、`wiki/` 放 LLM 編譯後的摘要與概念、`brainstorming/` 放與 AI 的探索紀錄、`artifacts/` 放自己的成品。表面上看起來比以前更嚴謹，但實際上我真正碰的主要只有兩層：把靈感丟進 `raw/notes/`，把完成的文章放進 `artifacts/`。中間的整理、連結、概念提取，交給 AI 去做。
+所以我把系統換成四層：`raw/` 放原始資料、`wiki/` 放 LLM 編譯後的摘要與概念、`brainstorming/` 放與 AI 的探索紀錄、`artifacts/` 放自己的成品。表面上看起來比以前更嚴謹，但實際上我真正碰的主要只有兩層：把靈感丟進 `raw/`，把完成的文章放進 `artifacts/`。中間的整理、連結、概念提取，交給 AI 去做。
 
 也正是在這一步，我才第一次感受到這種系統的價值。AI 不只是替我做摘要，而是能把不同文章裡反覆出現、卻從來沒有被我並排思考過的概念抽出來，重新編成脈絡。像 High Agency 這類想法，我明明在很多來源都碰過，卻從來沒有自己把它們連在一起。這種跨來源的概念編譯，是我手動很難穩定做到的事。
 

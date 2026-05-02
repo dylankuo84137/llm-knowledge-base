@@ -19,6 +19,7 @@
 - `wiki/`：LLM 編譯後的知識，不手動維護
 - `brainstorming/`：探索、問答、健康檢查等中間輸出
 - `artifacts/`：使用者自己的作品與完成品
+- `attachments/`：圖片、PDF 等附件
 
 ## 操作規則
 
@@ -28,13 +29,15 @@
 - 將索引寫入 `wiki/indexes/All-Sources.md` 與 `wiki/indexes/All-Concepts.md`
 - 將探索式問答與推理紀錄存入 `brainstorming/chat/`
 - 將健康檢查報告存入 `brainstorming/health/`
-- 將 `artifacts/` 下的內容視為 `origin: self`
-- 將 `raw/articles/`、`raw/books/`、`raw/podcasts/`、`raw/papers/` 視為 `origin: external`
-- 將 `raw/notes/`、`raw/projects/` 視為 `origin: self`
+- 每次 compile、query、health-check 操作都 append 到 `wiki/log.md`
+- 以 frontmatter `origin` 欄位判斷素材來源：`external` 為外部資料，`self` 為使用者自有作品
+- 將 `artifacts/` 下的所有內容視為 `origin: self`
+- 使用 `mv` 移動檔案，不用 `cp`，避免重複
 
 ## 工作流程對應
 
 - `compile`：讀取 `raw/` 與 `artifacts/` 的新檔案，生成摘要、更新概念、更新索引
+- `convert-to-md`：將 EPUB / PDF / DOCX / Facebook JSON 轉成 Markdown，產出放入 `raw/`
 - `thinking partner`：針對一個複雜主題提出問題、搜尋相關筆記、整理暫時性結論
 - `write partner`：為動筆前的寫作做資料蒐集，找出相關內容、反例、張力與未解問題
 - `braindump`：把對話沉澱成可重用素材，存到 `brainstorming/chat/`

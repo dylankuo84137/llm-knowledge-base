@@ -88,7 +88,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 > 你的知識庫已經準備好了。接下來可以：
 >
-> - 把第一篇文章放進 `raw/articles/`，執行 `/compile` 看看第一份摘要
+> - 把第一篇文章放進 `raw/`，執行 `/compile` 看看第一份摘要
 > - 執行 `/thinking-partner` 開始探索一個主題
 > - 隨時執行 `/health-check` 確認 wiki 的狀態
 

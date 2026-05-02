@@ -8,7 +8,7 @@ Facebook JSON 匯出 → Obsidian Markdown 轉換腳本
 用法：
   python3 scripts/facebook_to_md.py <facebook匯出資料夾> [輸出目錄]
 
-  輸出目錄預設為 raw/notes/social/facebook/
+  輸出目錄預設為 raw/
 """
 
 from __future__ import annotations
@@ -213,7 +213,7 @@ def main():
         sys.exit(1)
 
     vault_root = Path(__file__).resolve().parent.parent.parent
-    output_dir = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else vault_root / "raw/notes/social/facebook"
+    output_dir = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else vault_root / "raw"
 
     convert(fb_export, output_dir)
 

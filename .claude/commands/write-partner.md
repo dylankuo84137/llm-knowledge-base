@@ -1,7 +1,7 @@
 ---
 name: write-partner
 description: '寫作夥伴：從想法到文章的探索對話'
-argument-hint: '[想法描述，或 raw/notes/ 中的草稿路徑]'
+argument-hint: '[想法描述，或 raw/ 中的草稿路徑]'
 allowed-tools: Read, Glob, Grep, Agent
 ---
 
